@@ -1,0 +1,1562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mohamed Farhan — DevOps Engineer & GenAI Builder</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080b12;
+    --surface: #0e1420;
+    --surface2: #141a28;
+    --accent: #00e5ff;
+    --accent2: #7c3aed;
+    --accent3: #f59e0b;
+    --text: #e8eaf0;
+    --text-muted: #6b7280;
+    --text-dim: #9ca3af;
+    --border: rgba(255,255,255,0.07);
+    --glow: rgba(0,229,255,0.15);
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* ── CUSTOM CURSOR ── */
+  .cursor {
+    position: fixed;
+    width: 12px; height: 12px;
+    background: var(--accent);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.1s ease;
+    mix-blend-mode: difference;
+  }
+  .cursor-follower {
+    position: fixed;
+    width: 36px; height: 36px;
+    border: 1px solid var(--accent);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transition: all 0.15s ease;
+    opacity: 0.5;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 24px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(20px);
+    background: rgba(8,11,18,0.8);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .nav-logo span { color: var(--accent); }
+
+  .nav-links {
+    display: flex;
+    gap: 40px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--accent); }
+
+  .nav-cta {
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent) !important;
+    padding: 8px 20px;
+    border-radius: 4px;
+    transition: all 0.2s !important;
+  }
+
+  .nav-cta:hover {
+    background: var(--accent) !important;
+    color: var(--bg) !important;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 120px 60px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 60% 40%, rgba(0,229,255,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 80% at 80% 80%, rgba(124,58,237,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 40% at 20% 60%, rgba(245,158,11,0.04) 0%, transparent 50%);
+  }
+
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+  }
+
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,229,255,0.08);
+    border: 1px solid rgba(0,229,255,0.2);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 100px;
+    margin-bottom: 32px;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .hero-tag::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.3); }
+  }
+
+  .hero-name {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(52px, 8vw, 96px);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -3px;
+    color: var(--text);
+    margin-bottom: 8px;
+    animation: fadeUp 0.8s ease 0.1s both;
+  }
+
+  .hero-name .line2 {
+    display: block;
+    color: transparent;
+    -webkit-text-stroke: 1.5px rgba(255,255,255,0.2);
+  }
+
+  .hero-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(18px, 3vw, 28px);
+    font-weight: 500;
+    color: var(--accent);
+    margin-bottom: 24px;
+    animation: fadeUp 0.8s ease 0.2s both;
+  }
+
+  .hero-desc {
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--text-dim);
+    max-width: 520px;
+    margin-bottom: 48px;
+    animation: fadeUp 0.8s ease 0.3s both;
+  }
+
+  .hero-btns {
+    display: flex;
+    gap: 16px;
+    animation: fadeUp 0.8s ease 0.4s both;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--accent);
+    color: var(--bg);
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: 14px 28px;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: all 0.2s;
+    border: none;
+    cursor: none;
+  }
+
+  .btn-primary:hover {
+    background: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0,229,255,0.3);
+  }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    padding: 14px 28px;
+    border-radius: 6px;
+    text-decoration: none;
+    border: 1px solid var(--border);
+    transition: all 0.2s;
+    cursor: none;
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-2px);
+  }
+
+  .hero-stats {
+    position: absolute;
+    right: 60px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    animation: fadeIn 1s ease 0.6s both;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+  }
+
+  .stat-card:hover {
+    transform: translateX(-4px);
+    border-color: var(--accent);
+  }
+
+  .stat-number {
+    font-family: 'Syne', sans-serif;
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* ── SECTIONS ── */
+  section {
+    padding: 100px 60px;
+    position: relative;
+  }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    max-width: 60px;
+    height: 1px;
+    background: var(--accent);
+    opacity: 0.4;
+  }
+
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(32px, 5vw, 52px);
+    font-weight: 800;
+    letter-spacing: -2px;
+    line-height: 1.05;
+    margin-bottom: 16px;
+  }
+
+  .section-sub {
+    font-size: 16px;
+    color: var(--text-dim);
+    line-height: 1.7;
+    max-width: 560px;
+    margin-bottom: 60px;
+  }
+
+  /* ── ABOUT ── */
+  #about {
+    background: var(--surface);
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .about-image-wrap {
+    position: relative;
+  }
+
+  .about-image-frame {
+    width: 100%;
+    aspect-ratio: 4/5;
+    background: var(--surface2);
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .about-image-frame::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,229,255,0.1), rgba(124,58,237,0.1));
+  }
+
+  .avatar-placeholder {
+    font-family: 'Syne', sans-serif;
+    font-size: 120px;
+    font-weight: 800;
+    color: transparent;
+    -webkit-text-stroke: 2px rgba(0,229,255,0.3);
+    position: relative;
+    z-index: 1;
+    user-select: none;
+  }
+
+  .about-badge {
+    position: absolute;
+    bottom: -20px;
+    right: -20px;
+    background: var(--accent);
+    color: var(--bg);
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 12px 20px;
+    border-radius: 8px;
+    white-space: nowrap;
+  }
+
+  .about-corner {
+    position: absolute;
+    top: -16px;
+    left: -16px;
+    width: 48px;
+    height: 48px;
+    border-top: 3px solid var(--accent);
+    border-left: 3px solid var(--accent);
+    border-radius: 4px 0 0 0;
+  }
+
+  .about-text p {
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--text-dim);
+    margin-bottom: 20px;
+  }
+
+  .about-text p strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .about-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 32px;
+  }
+
+  .tag {
+    background: rgba(0,229,255,0.06);
+    border: 1px solid rgba(0,229,255,0.15);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 6px 14px;
+    border-radius: 100px;
+    letter-spacing: 0.05em;
+  }
+
+  /* ── SKILLS ── */
+  #skills {
+    background: var(--bg);
+  }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .skill-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+    group: true;
+  }
+
+  .skill-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,229,255,0.04), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .skill-card:hover {
+    border-color: rgba(0,229,255,0.3);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  }
+
+  .skill-card:hover::before { opacity: 1; }
+
+  .skill-icon {
+    width: 48px;
+    height: 48px;
+    background: rgba(0,229,255,0.1);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .skill-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .skill-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    position: relative;
+    z-index: 1;
+    margin-bottom: 20px;
+  }
+
+  .skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .skill-tag {
+    background: rgba(255,255,255,0.05);
+    color: var(--text-dim);
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+  }
+
+  /* ── EXPERIENCE ── */
+  #experience {
+    background: var(--surface);
+  }
+
+  .timeline {
+    position: relative;
+    padding-left: 40px;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+  }
+
+  .timeline-item {
+    position: relative;
+    margin-bottom: 60px;
+    padding-left: 40px;
+  }
+
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -44px;
+    top: 8px;
+    width: 8px;
+    height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    box-shadow: 0 0 0 4px rgba(0,229,255,0.15);
+  }
+
+  .timeline-date {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  .timeline-role {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .timeline-company {
+    font-size: 14px;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+  }
+
+  .timeline-desc {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    max-width: 600px;
+  }
+
+  .timeline-highlights {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  .highlight {
+    background: rgba(124,58,237,0.1);
+    border: 1px solid rgba(124,58,237,0.2);
+    color: #a78bfa;
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 100px;
+  }
+
+  /* ── ACHIEVEMENTS ── */
+  #achievements {
+    background: var(--bg);
+  }
+
+  .achievements-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .achievement-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .achievement-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transform: scaleX(0);
+    transition: transform 0.3s;
+    transform-origin: left;
+  }
+
+  .achievement-card:hover {
+    border-color: rgba(0,229,255,0.2);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+
+  .achievement-card:hover::after { transform: scaleX(1); }
+
+  .achievement-icon {
+    width: 52px;
+    height: 52px;
+    min-width: 52px;
+    background: linear-gradient(135deg, rgba(0,229,255,0.15), rgba(124,58,237,0.15));
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+  }
+
+  .achievement-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    line-height: 1.3;
+  }
+
+  .achievement-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  /* ── FITNESS ── */
+  #fitness {
+    background: var(--surface);
+    overflow: hidden;
+  }
+
+  .fitness-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .fitness-text p {
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--text-dim);
+    margin-bottom: 20px;
+  }
+
+  .fitness-sports {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 32px;
+  }
+
+  .sport-item {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+
+  .sport-item:hover {
+    border-color: var(--accent3);
+    color: var(--accent3);
+  }
+
+  .sport-item span:first-child { font-size: 20px; }
+
+  .fitness-visual {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .fitness-stat {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+  }
+
+  .fitness-stat:first-child {
+    grid-column: span 2;
+    background: linear-gradient(135deg, rgba(245,158,11,0.1), rgba(245,158,11,0.05));
+    border-color: rgba(245,158,11,0.2);
+  }
+
+  .fitness-stat:hover { transform: translateY(-4px); }
+
+  .fitness-stat-number {
+    font-family: 'Syne', sans-serif;
+    font-size: 42px;
+    font-weight: 800;
+    color: var(--accent3);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .fitness-stat-label {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  /* ── EDUCATION ── */
+  #education {
+    background: var(--bg);
+  }
+
+  .education-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .edu-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .edu-card::before {
+    content: attr(data-year);
+    position: absolute;
+    top: -10px;
+    right: 20px;
+    font-family: 'Syne', sans-serif;
+    font-size: 80px;
+    font-weight: 800;
+    color: rgba(255,255,255,0.03);
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .edu-card:hover {
+    border-color: rgba(0,229,255,0.2);
+    transform: translateY(-4px);
+  }
+
+  .edu-degree {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+
+  .edu-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+
+  .edu-school {
+    font-size: 14px;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+  }
+
+  .edu-meta {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .edu-badge {
+    background: rgba(245,158,11,0.1);
+    border: 1px solid rgba(245,158,11,0.2);
+    color: var(--accent3);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 100px;
+  }
+
+  /* ── CONTACT ── */
+  #contact {
+    background: var(--surface);
+    text-align: center;
+  }
+
+  .contact-inner {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .contact-email {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(20px, 3vw, 28px);
+    font-weight: 700;
+    color: var(--text);
+    text-decoration: none;
+    display: inline-block;
+    margin: 32px 0;
+    padding: 20px 40px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .contact-email::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,229,255,0.1), rgba(124,58,237,0.1));
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .contact-email:hover {
+    border-color: var(--accent);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(0,229,255,0.15);
+    color: var(--accent);
+  }
+
+  .contact-email:hover::before { opacity: 1; }
+
+  .social-links {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 40px;
+  }
+
+  .social-link {
+    width: 48px;
+    height: 48px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-size: 18px;
+    transition: all 0.2s;
+    color: var(--text-muted);
+  }
+
+  .social-link:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0,229,255,0.15);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+    padding: 32px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-text {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  .footer-text span { color: var(--accent); }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
+
+  /* ── REVEAL ANIMATION ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── FLOATING ORBS ── */
+  .orb {
+    position: fixed;
+    border-radius: 50%;
+    pointer-events: none;
+    filter: blur(80px);
+    z-index: 0;
+    animation: float 8s ease-in-out infinite;
+  }
+
+  .orb-1 {
+    width: 400px; height: 400px;
+    background: rgba(0,229,255,0.04);
+    top: 10%; left: -100px;
+    animation-delay: 0s;
+  }
+
+  .orb-2 {
+    width: 300px; height: 300px;
+    background: rgba(124,58,237,0.05);
+    bottom: 20%; right: -80px;
+    animation-delay: 3s;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-30px) scale(1.05); }
+  }
+
+  /* ── MARQUEE ── */
+  .marquee-wrap {
+    overflow: hidden;
+    padding: 20px 0;
+    background: rgba(0,229,255,0.04);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .marquee-track {
+    display: flex;
+    gap: 60px;
+    animation: marquee 20s linear infinite;
+    white-space: nowrap;
+  }
+
+  .marquee-item {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .marquee-item::after {
+    content: '✦';
+    color: var(--accent);
+    font-size: 10px;
+  }
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1024px) {
+    nav { padding: 20px 30px; }
+    .hero { padding: 120px 30px 80px; }
+    .hero-stats { display: none; }
+    section { padding: 80px 30px; }
+    .about-grid { grid-template-columns: 1fr; gap: 40px; }
+    .skills-grid { grid-template-columns: 1fr 1fr; }
+    .achievements-grid { grid-template-columns: 1fr; }
+    .fitness-content { grid-template-columns: 1fr; gap: 40px; }
+    .education-grid { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 12px; text-align: center; }
+  }
+
+  @media (max-width: 640px) {
+    .nav-links { display: none; }
+    .skills-grid { grid-template-columns: 1fr; }
+    .hero-btns { flex-direction: column; }
+    .fitness-sports { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Custom Cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-follower" id="cursorFollower"></div>
+
+<!-- Floating Orbs -->
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<!-- Navigation -->
+<nav>
+  <a href="#" class="nav-logo">MF<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#achievements">Achievements</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#contact" class="nav-cta">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<section class="hero" id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Available for opportunities</div>
+    <h1 class="hero-name">
+      Mohamed
+      <span class="line2">Farhan.</span>
+    </h1>
+    <p class="hero-title">DevOps Engineer & GenAI Builder</p>
+    <p class="hero-desc">
+      Building intelligent infrastructure at <strong style="color:var(--text)">Bosch</strong> — 
+      deploying GenAI solutions on Kubernetes, automating everything, 
+      and turning complex systems into simple, reliable products.
+    </p>
+    <div class="hero-btns">
+      <a href="#contact" class="btn-primary">
+        Get in Touch
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="#experience" class="btn-secondary">
+        View Work
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+      </a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="stat-card">
+      <div class="stat-number">2+</div>
+      <div class="stat-label">Years Experience</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">115+</div>
+      <div class="stat-label">Projects Led</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">8.72</div>
+      <div class="stat-label">CGPA</div>
+    </div>
+  </div>
+</section>
+
+<!-- Marquee -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="marquee-item">DevOps Engineering</span>
+    <span class="marquee-item">Generative AI</span>
+    <span class="marquee-item">Kubernetes</span>
+    <span class="marquee-item">Rancher</span>
+    <span class="marquee-item">Python</span>
+    <span class="marquee-item">FastAPI</span>
+    <span class="marquee-item">Docker</span>
+    <span class="marquee-item">Hybrid Athlete</span>
+    <span class="marquee-item">Public Speaking</span>
+    <span class="marquee-item">Blogging</span>
+    <span class="marquee-item">DevOps Engineering</span>
+    <span class="marquee-item">Generative AI</span>
+    <span class="marquee-item">Kubernetes</span>
+    <span class="marquee-item">Rancher</span>
+    <span class="marquee-item">Python</span>
+    <span class="marquee-item">FastAPI</span>
+    <span class="marquee-item">Docker</span>
+    <span class="marquee-item">Hybrid Athlete</span>
+    <span class="marquee-item">Public Speaking</span>
+    <span class="marquee-item">Blogging</span>
+  </div>
+</div>
+
+<!-- About -->
+<section id="about">
+  <div class="about-grid">
+    <div class="about-image-wrap reveal">
+      <div class="about-corner"></div>
+      <div class="about-image-frame">
+        <div class="avatar-placeholder">MF</div>
+      </div>
+      <div class="about-badge">📍 Coimbatore, India</div>
+    </div>
+    <div class="about-text reveal">
+      <div class="section-label">About Me</div>
+      <h2 class="section-title">Engineer by day.<br>Athlete by dawn.</h2>
+      <p>I am <strong>Mohamed Farhan Jafarullah</strong>, a DevOps Engineer at <strong>Bosch Global Software Technologies</strong> in Coimbatore. I work at the intersection of infrastructure and intelligence — building GenAI solutions, automating deployments, and making systems that just work.</p>
+      <p>Beyond code, I am deeply passionate about <strong>public speaking</strong>, <strong>community building</strong>, and <strong>athletics</strong>. I led the Rotaract Club of Coimbatore CACIL as President, delivering 115+ impactful projects. I train as a hybrid athlete balancing weightlifting, badminton, basketball, and volleyball.</p>
+      <p>Currently pursuing an <strong>MBA in Marketing</strong> from Manipal Academy while working full-time — because learning never stops.</p>
+      <div class="about-tags">
+        <span class="tag">DevOps</span>
+        <span class="tag">GenAI</span>
+        <span class="tag">Kubernetes</span>
+        <span class="tag">Python</span>
+        <span class="tag">Public Speaking</span>
+        <span class="tag">Hybrid Athlete</span>
+        <span class="tag">Blogger</span>
+        <span class="tag">Muslim</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Skills -->
+<section id="skills">
+  <div class="section-label reveal">What I Do</div>
+  <h2 class="section-title reveal">Skills & Expertise</h2>
+  <p class="section-sub reveal">From container orchestration to GenAI deployments — here is what I bring to the table.</p>
+  <div class="skills-grid">
+    <div class="skill-card reveal">
+      <div class="skill-icon">☸️</div>
+      <div class="skill-name">DevOps & Cloud</div>
+      <div class="skill-desc">Building and managing production-grade Kubernetes clusters, CI/CD pipelines, and cloud infrastructure.</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Kubernetes</span>
+        <span class="skill-tag">Rancher</span>
+        <span class="skill-tag">Docker</span>
+        <span class="skill-tag">RKE2</span>
+        <span class="skill-tag">Helm</span>
+      </div>
+    </div>
+    <div class="skill-card reveal">
+      <div class="skill-icon">🤖</div>
+      <div class="skill-name">Generative AI</div>
+      <div class="skill-desc">Deploying and integrating GenAI solutions including PrivateGPT, LLM APIs, and dynamic AI-powered applications.</div>
+      <div class="skill-tags">
+        <span class="skill-tag">PrivateGPT</span>
+        <span class="skill-tag">FastAPI</span>
+        <span class="skill-tag">LLM APIs</span>
+        <span class="skill-tag">RAG</span>
+      </div>
+    </div>
+    <div class="skill-card reveal">
+      <div class="skill-icon">🐍</div>
+      <div class="skill-name">Python Development</div>
+      <div class="skill-desc">Building backend services, automation scripts, and data processing pipelines with Python and modern frameworks.</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Python</span>
+        <span class="skill-tag">FastAPI</span>
+        <span class="skill-tag">BeautifulSoup</span>
+        <span class="skill-tag">REST APIs</span>
+      </div>
+    </div>
+    <div class="skill-card reveal">
+      <div class="skill-icon">🔄</div>
+      <div class="skill-name">Dynamic Sync</div>
+      <div class="skill-desc">Building real-time data sync systems connecting SharePoint, Docupedia, and web dashboards with zero manual intervention.</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Graph API</span>
+        <span class="skill-tag">Confluence API</span>
+        <span class="skill-tag">WebSockets</span>
+        <span class="skill-tag">Caching</span>
+      </div>
+    </div>
+    <div class="skill-card reveal">
+      <div class="skill-icon">📊</div>
+      <div class="skill-name">Project Management</div>
+      <div class="skill-desc">Leading cross-functional teams, organizing events, and delivering projects on time with measurable impact.</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Agile</span>
+        <span class="skill-tag">JIRA</span>
+        <span class="skill-tag">Confluence</span>
+        <span class="skill-tag">Leadership</span>
+      </div>
+    </div>
+    <div class="skill-card reveal">
+      <div class="skill-icon">💼</div>
+      <div class="skill-name">Business Development</div>
+      <div class="skill-desc">Strategic thinking, marketing, networking, and driving growth — skills sharpened through MBA and entrepreneurial exposure.</div>
+      <div class="skill-tags">
+        <span class="skill-tag">MBA Marketing</span>
+        <span class="skill-tag">Strategy</span>
+        <span class="skill-tag">Networking</span>
+        <span class="skill-tag">Brand Building</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Experience -->
+<section id="experience">
+  <div class="section-label reveal">Career</div>
+  <h2 class="section-title reveal">Work Experience</h2>
+  <p class="section-sub reveal">Building impactful solutions at scale.</p>
+  <div class="timeline">
+    <div class="timeline-item reveal">
+      <div class="timeline-date">2023 — Present</div>
+      <div class="timeline-role">DevOps Engineer</div>
+      <div class="timeline-company">Bosch Global Software Technologies — Coimbatore, India</div>
+      <div class="timeline-desc">Working on PA-TO team deploying and managing GenAI solutions on Rancher Kubernetes clusters. Building dynamic data sync systems, automating infrastructure workflows, and enabling AI-powered applications for enterprise teams across Bosch.</div>
+      <div class="timeline-highlights">
+        <span class="highlight">GenAI Deployments</span>
+        <span class="highlight">Rancher RKE2</span>
+        <span class="highlight">Dynamic Sync</span>
+        <span class="highlight">Champ-Skill Recognition 2024</span>
+      </div>
+    </div>
+    <div class="timeline-item reveal">
+      <div class="timeline-date">2024 — 2025</div>
+      <div class="timeline-role">Group Rotaract Representative (GRR)</div>
+      <div class="timeline-company">Rotaract International District 3201</div>
+      <div class="timeline-desc">Served as Group Rotaract Representative overseeing multiple clubs in RI District 3201. Coordinated district-level initiatives, mentored club presidents, and facilitated impactful community projects across the region.</div>
+      <div class="timeline-highlights">
+        <span class="highlight">District Leadership</span>
+        <span class="highlight">Community Impact</span>
+        <span class="highlight">Mentorship</span>
+      </div>
+    </div>
+    <div class="timeline-item reveal">
+      <div class="timeline-date">2022 — 2023</div>
+      <div class="timeline-role">Club President</div>
+      <div class="timeline-company">Rotaract Club of Coimbatore CACIL</div>
+      <div class="timeline-desc">Led the club under the theme "Fuelled To Fascinate" delivering 115+ projects. Earned Best President recognition and 3 DRR Special Recognitions from RI District 3201. Organized landmark events including Thuimai, Splendour, and Motta Maadi Music.</div>
+      <div class="timeline-highlights">
+        <span class="highlight">115+ Projects</span>
+        <span class="highlight">Best President Award</span>
+        <span class="highlight">3 DRR Recognitions</span>
+        <span class="highlight">House Captain 2017-18</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Achievements -->
+<section id="achievements">
+  <div class="section-label reveal">Recognition</div>
+  <h2 class="section-title reveal">Achievements</h2>
+  <p class="section-sub reveal">Milestones that define the journey.</p>
+  <div class="achievements-grid">
+    <div class="achievement-card reveal">
+      <div class="achievement-icon">🏆</div>
+      <div>
+        <div class="achievement-title">Champ-Skill Recognition — Bosch</div>
+        <div class="achievement-desc">Recognised for meticulous planning, coordination and organising skills in the PA-TO Townhall Coimbatore. Nominated by Susanna Rose Mary Lourdunayagam for outstanding collaborative work.</div>
+      </div>
+    </div>
+    <div class="achievement-card reveal">
+      <div class="achievement-icon">🥇</div>
+      <div>
+        <div class="achievement-title">Best President — Rotaract CACIL</div>
+        <div class="achievement-desc">Awarded Best President for delivering 115+ projects under the theme "Fuelled To Fascinate" with measurable community impact across Coimbatore.</div>
+      </div>
+    </div>
+    <div class="achievement-card reveal">
+      <div class="achievement-icon">⭐</div>
+      <div>
+        <div class="achievement-title">3x DRR Special Recognitions</div>
+        <div class="achievement-desc">Received three special recognitions from the District Rotaract Representative of RI District 3201 for exceptional service and leadership during the 2022-23 term.</div>
+      </div>
+    </div>
+    <div class="achievement-card reveal">
+      <div class="achievement-icon">🎓</div>
+      <div>
+        <div class="achievement-title">First Class with Distinction — B.Tech IT</div>
+        <div class="achievement-desc">Graduated with a CGPA of 8.72 in Information Technology from Coimbatore Institute of Technology, affiliated to Anna University Chennai.</div>
+      </div>
+    </div>
+    <div class="achievement-card reveal">
+      <div class="achievement-icon">🕌</div>
+      <div>
+        <div class="achievement-title">Umrah Pilgrimage</div>
+        <div class="achievement-desc">Completed Umrah — a deeply meaningful personal and spiritual achievement that shapes values of humility, discipline, and gratitude in everyday life.</div>
+      </div>
+    </div>
+    <div class="achievement-card reveal">
+      <div class="achievement-icon">🏫</div>
+      <div>
+        <div class="achievement-title">School House Captain 2017-18</div>
+        <div class="achievement-desc">Elected House Captain demonstrating early leadership ability, team coordination, and the drive to serve and inspire peers from a young age.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Fitness -->
+<section id="fitness">
+  <div class="fitness-content">
+    <div class="fitness-text reveal">
+      <div class="section-label">Lifestyle</div>
+      <h2 class="section-title">The Hybrid<br>Athlete.</h2>
+      <p>Training is not just a hobby — it is a philosophy. As a hybrid athlete I combine strength training with multiple sports, pushing physical and mental limits every single day.</p>
+      <p>The same discipline that builds a stronger body builds better code, better leadership, and better decisions. Fitness taught me consistency, resilience, and the power of showing up every day.</p>
+      <div class="fitness-sports">
+        <div class="sport-item"><span>🏋️</span><span>Weightlifting</span></div>
+        <div class="sport-item"><span>🏸</span><span>Badminton</span></div>
+        <div class="sport-item"><span>🏀</span><span>Basketball</span></div>
+        <div class="sport-item"><span>🏐</span><span>Volleyball</span></div>
+        <div class="sport-item"><span>🏎️</span><span>Road Racing</span></div>
+        <div class="sport-item"><span>🏊</span><span>Swimming</span></div>
+      </div>
+    </div>
+    <div class="fitness-visual reveal">
+      <div class="fitness-stat">
+        <div class="fitness-stat-number">5AM</div>
+        <div class="fitness-stat-label">Morning Discipline</div>
+      </div>
+      <div class="fitness-stat">
+        <div class="fitness-stat-number">6</div>
+        <div class="fitness-stat-label">Sports Practiced</div>
+      </div>
+      <div class="fitness-stat">
+        <div class="fitness-stat-number">ON</div>
+        <div class="fitness-stat-label">Gold Standard Whey</div>
+      </div>
+      <div class="fitness-stat">
+        <div class="fitness-stat-number">∞</div>
+        <div class="fitness-stat-label">Discipline</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Education -->
+<section id="education">
+  <div class="section-label reveal">Academic</div>
+  <h2 class="section-title reveal">Education</h2>
+  <p class="section-sub reveal">Knowledge is the foundation of everything.</p>
+  <div class="education-grid">
+    <div class="edu-card reveal" data-year="23">
+      <div class="edu-degree">B.Tech — Information Technology</div>
+      <div class="edu-title">Coimbatore Institute of Technology</div>
+      <div class="edu-school">Anna University, Chennai — 2019 to 2023</div>
+      <div class="edu-meta">
+        <span class="edu-badge">CGPA 8.72</span>
+        <span class="edu-badge">First Class Distinction</span>
+      </div>
+    </div>
+    <div class="edu-card reveal" data-year="25">
+      <div class="edu-degree">MBA — Marketing</div>
+      <div class="edu-title">Manipal Academy of Higher Education</div>
+      <div class="edu-school">Online Manipal — 2023 to 2025 (Final Year)</div>
+      <div class="edu-meta">
+        <span class="edu-badge">Semester 3</span>
+        <span class="edu-badge">In Progress</span>
+      </div>
+    </div>
+    <div class="edu-card reveal" data-year="18">
+      <div class="edu-degree">School</div>
+      <div class="edu-title">House Captain 2017-18</div>
+      <div class="edu-school">Leadership from the very beginning</div>
+      <div class="edu-meta">
+        <span class="edu-badge">Leadership</span>
+        <span class="edu-badge">Team Management</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section id="contact">
+  <div class="contact-inner">
+    <div class="section-label reveal" style="justify-content:center">Contact</div>
+    <h2 class="section-title reveal">Let's Build<br>Something Great.</h2>
+    <p class="section-sub reveal" style="margin:0 auto 0">Whether it is a DevOps challenge, GenAI project, speaking opportunity, or just a conversation — I am always open.</p>
+    <a href="mailto:Jafarullah.MohamedFarhan@in.bosch.com" class="contact-email reveal">
+      Jafarullah.MohamedFarhan@in.bosch.com
+    </a>
+    <div class="social-links reveal">
+      <a href="#" class="social-link" title="LinkedIn">in</a>
+      <a href="#" class="social-link" title="GitHub">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0012 2z"/></svg>
+      </a>
+      <a href="#" class="social-link" title="Twitter">𝕏</a>
+      <a href="tel:+91" class="social-link" title="Phone">📞</a>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-text">© 2026 <span>Mohamed Farhan Jafarullah</span> — Built with passion from Coimbatore 🇮🇳</div>
+  <div class="footer-text">DevOps Engineer <span>·</span> GenAI Builder <span>·</span> Hybrid Athlete</div>
+</footer>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const follower = document.getElementById('cursorFollower');
+  let mx = 0, my = 0, fx = 0, fy = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx - 6 + 'px';
+    cursor.style.top = my - 6 + 'px';
+  });
+
+  function animateFollower() {
+    fx += (mx - fx - 18) * 0.12;
+    fy += (my - fy - 18) * 0.12;
+    follower.style.left = fx + 'px';
+    follower.style.top = fy + 'px';
+    requestAnimationFrame(animateFollower);
+  }
+  animateFollower();
+
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.transform = 'scale(2.5)';
+      follower.style.transform = 'scale(1.5)';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.transform = 'scale(1)';
+      follower.style.transform = 'scale(1)';
+    });
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => {
+          entry.target.classList.add('visible');
+        }, i * 80);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  reveals.forEach(el => observer.observe(el));
+
+  // Counter animation
+  function animateCounter(el, target, duration = 2000) {
+    let start = 0;
+    const step = target / (duration / 16);
+    const timer = setInterval(() => {
+      start += step;
+      if (start >= target) {
+        el.textContent = target % 1 === 0 ? target : target.toFixed(2);
+        clearInterval(timer);
+      } else {
+        el.textContent = target % 1 === 0 ? Math.floor(start) : start.toFixed(2);
+      }
+    }, 16);
+  }
+
+  // Nav active state
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 200) current = s.getAttribute('id');
+    });
+    navLinks.forEach(link => {
+      link.style.color = link.getAttribute('href') === '#' + current
+        ? 'var(--accent)' : '';
+    });
+  });
+</script>
+</body>
+</html>
